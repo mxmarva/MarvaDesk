@@ -449,6 +449,7 @@ build)
 
 	# Build rustdesk lib
 
+	[ -n "$MARVADESK_VARIANT" ] && RUSTDESK_FEATURES="${RUSTDESK_FEATURES},marvadesk_${MARVADESK_VARIANT}"
 	cargo ndk \
 		--platform 21 \
 		--target "${RUST_TARGET}" \
@@ -584,12 +585,15 @@ build)
 		mv flutter-out flutter-sdk/src/out
 	fi
 
-	# Build the apk
+	# Build the apk (MarvaDesk: use flavor matching MARVADESK_VARIANT)
+	FLUTTER_FLAVOR_ARGS=""
+	[ -n "$MARVADESK_VARIANT" ] && FLUTTER_FLAVOR_ARGS="--flavor ${MARVADESK_VARIANT}"
 
 	pushd flutter
 
 	if [ "${ANDROID_ABI}" = "x86" ]; then
 		flutter build apk \
+			$FLUTTER_FLAVOR_ARGS \
 			--local-engine-src-path="$(readlink -mf "../flutter-sdk/src")" \
 			--local-engine=android_jit_release_x86 \
 			--debug \
@@ -598,6 +602,7 @@ build)
 			--target-platform "${FLUTTER_TARGET}"
 	else
 		flutter build apk \
+			$FLUTTER_FLAVOR_ARGS \
 			--release \
 			--build-number="${VERCODE}" \
 			--build-name="${VERNAME}" \

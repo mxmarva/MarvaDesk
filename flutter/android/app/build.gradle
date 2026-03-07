@@ -96,12 +96,24 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.carriez.flutter_hbb"
+        // MarvaDesk package id (Soluciones Marva)
+        applicationId "com.solucionesmarva.desk"
         minSdkVersion 22
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+    }
+
+    flavorDimensions += "marvadesk"
+    productFlavors {
+        agente {
+            dimension "marvadesk"
+            resValue "string", "app_name", "MarvaDesk Agente"
+        }
+        cliente {
+            dimension "marvadesk"
+            resValue "string", "app_name", "MarvaDesk Cliente"
+        }
     }
 
     signingConfigs {

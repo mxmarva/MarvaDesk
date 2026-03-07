@@ -150,6 +150,16 @@ def make_parser():
             action='store_true',
             help='Enable feature screencapturekit'
         )
+    parser.add_argument(
+        '--marvadesk-cliente',
+        action='store_true',
+        help='Build MarvaDesk Cliente variant (incoming only, fixed servers)'
+    )
+    parser.add_argument(
+        '--marvadesk-agente',
+        action='store_true',
+        help='Build MarvaDesk Agente variant (incoming+outgoing, fixed servers)'
+    )
     return parser
 
 
@@ -284,6 +294,10 @@ def get_features(args):
     if osx:
         if args.screencapturekit:
             features.append('screencapturekit')
+    if getattr(args, 'marvadesk_cliente', False):
+        features.append('marvadesk_cliente')
+    if getattr(args, 'marvadesk_agente', False):
+        features.append('marvadesk_agente')
     print("features:", features)
     return features
 
@@ -466,6 +480,13 @@ def main():
     global skip_cargo
     parser = make_parser()
     args = parser.parse_args()
+
+    if args.flutter and not (getattr(args, 'marvadesk_cliente', False) or getattr(args, 'marvadesk_agente', False)):
+        sys.stderr.write(
+            'Error: MarvaDesk builds require exactly one of --marvadesk-cliente or --marvadesk-agente.\n'
+            'Example: python3 build.py --flutter --marvadesk-cliente\n'
+        )
+        sys.exit(-1)
 
     if os.path.exists(exe_path):
         os.unlink(exe_path)
