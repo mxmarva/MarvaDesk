@@ -129,7 +129,8 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
     _autoDisconnectTimeout =
         bind.mainGetOptionSync(key: kOptionAutoDisconnectTimeout);
     _hideServer =
-        bind.mainGetBuildinOption(key: kOptionHideServerSetting) == 'Y';
+        bind.mainGetBuildinOption(key: kOptionHideServerSetting) == 'Y' ||
+        bind.mainGetAppNameSync() == 'MarvaDesk';
     _hideProxy = bind.mainGetBuildinOption(key: kOptionHideProxySetting) == 'Y';
     _hideNetwork =
         bind.mainGetBuildinOption(key: kOptionHideNetworkSetting) == 'Y';

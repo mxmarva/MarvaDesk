@@ -1553,7 +1553,8 @@ class _NetworkState extends State<_Network> with AutomaticKeepAliveClientMixin {
 
   Widget network(BuildContext context) {
     final hideServer =
-        bind.mainGetBuildinOption(key: kOptionHideServerSetting) == 'Y';
+        bind.mainGetBuildinOption(key: kOptionHideServerSetting) == 'Y' ||
+        bind.mainGetAppNameSync() == 'MarvaDesk';
     final hideProxy =
         isWeb || bind.mainGetBuildinOption(key: kOptionHideProxySetting) == 'Y';
     final hideWebSocket = isWeb ||
