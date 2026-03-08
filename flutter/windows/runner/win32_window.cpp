@@ -19,39 +19,14 @@ static int g_active_window_count = 0;
 // Static variable to hold the custom icon (needs cleanup on exit)
 static HICON g_custom_icon_ = nullptr;
 
-// Try to load icon from data\flutter_assets\assets\icon.ico if it exists.
-// Returns nullptr if the file doesn't exist or can't be loaded.
+// Use only the app icon from resources (app_icon.ico) for the window.
+// This avoids loading a stray icon.ico from assets that might be dark/wrong.
 HICON LoadCustomIcon() {
-  if (g_custom_icon_ != nullptr) {
-    return g_custom_icon_;
-  }
-  wchar_t exe_path[MAX_PATH];
-  if (!GetModuleFileNameW(nullptr, exe_path, MAX_PATH)) {
-    return nullptr;
-  }
-
-  std::wstring icon_path = exe_path;
-  size_t last_slash = icon_path.find_last_of(L"\\/");
-  if (last_slash == std::wstring::npos) {
-    return nullptr;
-  }
-
-  icon_path = icon_path.substr(0, last_slash + 1);
-  icon_path += L"data\\flutter_assets\\assets\\icon.ico";
-
-  // Check file attributes - reject if missing, directory, or reparse point (symlink/junction)
-  DWORD file_attr = GetFileAttributesW(icon_path.c_str());
-  if (file_attr == INVALID_FILE_ATTRIBUTES ||
-      (file_attr & FILE_ATTRIBUTE_DIRECTORY) ||
-      (file_attr & FILE_ATTRIBUTE_REPARSE_POINT)) {
-    return nullptr;
-  }
-
-  g_custom_icon_ = (HICON)LoadImageW(
-      nullptr, icon_path.c_str(), IMAGE_ICON, 0, 0,
-      LR_LOADFROMFILE | LR_DEFAULTSIZE);
-  return g_custom_icon_;
+  return nullptr;
 }
+
+// (Previously tried data\flutter_assets\assets\icon.ico first; removed so window
+// always uses resources\\app_icon.ico from res/icon.png via flutter_launcher_icons.)
 
 using EnableNonClientDpiScaling = BOOL __stdcall(HWND hwnd);
 
@@ -120,7 +95,7 @@ const wchar_t* WindowClassRegistrar::GetWindowClass() {
     window_class.cbWndExtra = 0;
     window_class.hInstance = GetModuleHandle(nullptr);
     
-    // Try to load icon from data\flutter_assets\assets\icon.ico if it exists
+    // Always use app icon from resources (app_icon.ico), from res/icon.png
     HICON custom_icon = LoadCustomIcon();
     if (custom_icon != nullptr) {
       window_class.hIcon = custom_icon;

@@ -632,20 +632,36 @@ class _DesktopTabState extends State<DesktopTab>
                         )),
                     Offstage(
                       offstage: kUseCompatibleUiMode || isMacOS,
-                      child: Row(children: [
-                        Offstage(
-                          offstage: !showLogo,
-                          child: loadIcon(16),
-                        ),
-                        Offstage(
-                            offstage: !showTitle,
-                            child: const Text(
-                              "MarvaDesk",
-                              style: TextStyle(fontSize: 13),
-                            ).marginOnly(left: 2))
-                      ]).marginOnly(
-                        left: 5,
-                        right: 10,
+                      child: Builder(
+                        builder: (context) {
+                          // Use explicit light color on dark theme so icon/text are never black
+                          final isDark = Theme.of(context).brightness == Brightness.dark;
+                          final iconColor = isDark ? Colors.white : Theme.of(context).colorScheme.onSurface;
+                          return Row(children: [
+                            Offstage(
+                              offstage: !showLogo,
+                              child: ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  iconColor,
+                                  BlendMode.srcIn,
+                                ),
+                                child: loadIcon(16),
+                              ),
+                            ),
+                            Offstage(
+                                offstage: !showTitle,
+                                child: Text(
+                                  "MarvaDesk",
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: iconColor,
+                                  ),
+                                ).marginOnly(left: 2))
+                          ]).marginOnly(
+                            left: 5,
+                            right: 10,
+                          );
+                        },
                       ),
                     ),
                     Expanded(

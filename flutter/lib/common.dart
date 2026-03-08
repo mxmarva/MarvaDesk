@@ -3689,9 +3689,21 @@ Widget loadLogo() {
               return Container();
             },
           );
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          // Use explicit light color on dark theme so logo is never black
+          final tintColor = isDark ? Colors.white : Theme.of(context).colorScheme.onSurface;
+          final child = isDark
+              ? ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    tintColor,
+                    BlendMode.srcIn,
+                  ),
+                  child: image,
+                )
+              : image;
           return Container(
             constraints: BoxConstraints(maxWidth: 300, maxHeight: 60),
-            child: image,
+            child: child,
           ).marginOnly(left: 12, right: 12, top: 12);
         }
         return const Offstage();
