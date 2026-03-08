@@ -1,67 +1,85 @@
+# MarvaDesk
+
 <p align="center">
-  <img src="res/logo-header.svg" alt="RustDesk - Your remote desktop"><br>
+  <strong>MarvaDesk</strong> — Remote Desktop<br>
   <a href="#raw-steps-to-build">Build</a> •
   <a href="#how-to-build-with-docker">Docker</a> •
   <a href="#file-structure">Structure</a> •
-  <a href="#snapshot">Snapshot</a><br>
-  [<a href="docs/README-UA.md">Українська</a>] | [<a href="docs/README-CS.md">česky</a>] | [<a href="docs/README-ZH.md">中文</a>] | [<a href="docs/README-HU.md">Magyar</a>] | [<a href="docs/README-ES.md">Español</a>] | [<a href="docs/README-FA.md">فارسی</a>] | [<a href="docs/README-FR.md">Français</a>] | [<a href="docs/README-DE.md">Deutsch</a>] | [<a href="docs/README-PL.md">Polski</a>] | [<a href="docs/README-ID.md">Indonesian</a>] | [<a href="docs/README-FI.md">Suomi</a>] | [<a href="docs/README-ML.md">മലയാളം</a>] | [<a href="docs/README-JP.md">日本語</a>] | [<a href="docs/README-NL.md">Nederlands</a>] | [<a href="docs/README-IT.md">Italiano</a>] | [<a href="docs/README-RU.md">Русский</a>] | [<a href="docs/README-PTBR.md">Português (Brasil)</a>] | [<a href="docs/README-EO.md">Esperanto</a>] | [<a href="docs/README-KR.md">한국어</a>] | [<a href="docs/README-AR.md">العربي</a>] | [<a href="docs/README-VN.md">Tiếng Việt</a>] | [<a href="docs/README-DA.md">Dansk</a>] | [<a href="docs/README-GR.md">Ελληνικά</a>] | [<a href="docs/README-TR.md">Türkçe</a>] | [<a href="docs/README-NO.md">Norsk</a>] | [<a href="docs/README-RO.md">Română</a>]<br>
-  <b>We need your help to translate this README, <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">RustDesk UI</a> and <a href="https://github.com/rustdesk/doc.rustdesk.com">RustDesk Doc</a> to your native language</b>
+  <a href="#screenshots">Screenshots</a>
 </p>
 
-> [!Caution]
-> **Misuse Disclaimer:** <br>
-> The developers of RustDesk do not condone or support any unethical or illegal use of this software. Misuse, such as unauthorized access, control or invasion of privacy, is strictly against our guidelines. The authors are not responsible for any misuse of the application.
+---
 
+Solución de escritorio remoto escrita en Rust. Funciona sin configuración previa. Tienes control total de tus datos. Puedes usar tu propio servidor de encuentro/relé o implementar el tuyo.
 
-Chat with us: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/rustdesk) | [Reddit](https://www.reddit.com/r/rustdesk) | [YouTube](https://www.youtube.com/@rustdesk)
+> **Aviso:** Los desarrolladores de MarvaDesk no respaldan el uso ilegal o no ético de este software. El acceso no autorizado, el control remoto sin permiso o la invasión de la privacidad van contra nuestras directrices. Los autores no son responsables del mal uso de la aplicación.
 
-[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Advanced%20Features-blue)](https://rustdesk.com/pricing.html)
+---
 
-Yet another remote desktop solution, written in Rust. Works out of the box with no configuration required. You have full control of your data, with no concerns about security. You can use our rendezvous/relay server, [set up your own](https://rustdesk.com/server), or [write your own rendezvous/relay server](https://github.com/rustdesk/rustdesk-server-demo).
+## Requisitos y dependencias
 
-![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
+Las versiones de escritorio usan **Flutter** (recomendado) o Sciter (obsoleto) para la interfaz.
 
-RustDesk welcomes contribution from everyone. See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for help getting started.
+### Dependencias C++ (vcpkg)
 
-[**FAQ**](https://github.com/rustdesk/rustdesk/wiki/FAQ)
+Necesitas [vcpkg](https://github.com/microsoft/vcpkg) con `VCPKG_ROOT` configurado:
 
-[**BINARY DOWNLOAD**](https://github.com/rustdesk/rustdesk/releases)
+- **Windows:**  
+  `vcpkg install libvpx:x64-windows-static libyuv:x64-windows-static opus:x64-windows-static aom:x64-windows-static`
+- **Linux/macOS:**  
+  `vcpkg install libvpx libyuv opus aom`
 
-[**NIGHTLY BUILD**](https://github.com/rustdesk/rustdesk/releases/tag/nightly)
+### Sciter (solo si compilas la UI legacy)
 
-[<img src="https://f-droid.org/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.carriez.flutter_hbb)
-[<img src="https://flathub.org/api/badge?svg&locale=en"
-    alt="Get it on Flathub"
-    height="80">](https://flathub.org/apps/com.rustdesk.RustDesk)
+Para compilar con la interfaz Sciter (en desuso) debes descargar la biblioteca dinámica de Sciter:
 
-## Dependencies
+- [Windows](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.win/x64/sciter.dll)
+- [Linux](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so)
+- [macOS](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.osx/libsciter.dylib)
 
-Desktop versions use Flutter or Sciter (deprecated) for GUI, this tutorial is for Sciter only, since it is easier and more friendly to start. Check out our [CI](https://github.com/rustdesk/rustdesk/blob/master/.github/workflows/flutter-build.yml) for building Flutter version.
+---
 
-Please download Sciter dynamic library yourself.
+## Raw steps to build
 
-[Windows](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.win/x64/sciter.dll) |
-[Linux](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so) |
-[macOS](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.osx/libsciter.dylib)
+1. Tener entorno de desarrollo Rust y compilador C++.
+2. Instalar vcpkg y las dependencias anteriores.
+3. Clonar el repositorio (con submódulos):
+   ```sh
+   git clone --recurse-submodules https://github.com/MarvaDesk/MarvaDesk
+   cd MarvaDesk
+   ```
+4. Ejecutar:
+   - **Con Flutter (recomendado):**  
+     `python build.py --flutter`
+   - **Solo Rust + Sciter:**  
+     `cargo run` (requiere la librería Sciter en `target/debug/`)
 
-## Raw Steps to build
+### Comandos de build útiles
 
-- Prepare your Rust development env and C++ build env
+| Comando | Descripción |
+|--------|-------------|
+| `python build.py --flutter` | Build escritorio con UI Flutter |
+| `python build.py --flutter --release` | Build en modo release |
+| `python build.py --hwcodec` | Build con codec por hardware |
+| `python build.py --vram` | Build con VRAM (solo Windows) |
+| `cargo build --release` | Solo binario Rust en release |
+| `cargo build --features hwcodec` | Rust con codec por hardware |
 
-- Install [vcpkg](https://github.com/microsoft/vcpkg), and set `VCPKG_ROOT` env variable correctly
+### Móvil (Flutter)
 
-  - Windows: vcpkg install libvpx:x64-windows-static libyuv:x64-windows-static opus:x64-windows-static aom:x64-windows-static
-  - Linux/macOS: vcpkg install libvpx libyuv opus aom
+```sh
+cd flutter
+flutter build android   # APK Android
+flutter build ios       # App iOS
+flutter run             # Ejecutar en dispositivo/emulador
+flutter test            # Tests
+```
 
-- run `cargo run`
-
-## [Build](https://rustdesk.com/docs/en/dev/build/)
+---
 
 ## How to Build on Linux
 
-### Ubuntu 18 (Debian 10)
+### Ubuntu 18 / Debian 10
 
 ```sh
 sudo apt install -y zip g++ gcc git curl wget nasm yasm libgtk-3-dev clang libxcb-randr0-dev libxdo-dev \
@@ -75,31 +93,31 @@ sudo apt install -y zip g++ gcc git curl wget nasm yasm libgtk-3-dev clang libxc
 sudo zypper install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libXfixes-devel cmake alsa-lib-devel gstreamer-devel gstreamer-plugins-base-devel xdotool-devel pam-devel
 ```
 
-### Fedora 28 (CentOS 8)
+### Fedora 28 / CentOS 8
 
 ```sh
 sudo yum -y install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel cmake alsa-lib-devel gstreamer1-devel gstreamer1-plugins-base-devel pam-devel
 ```
 
-### Arch (Manjaro)
+### Arch / Manjaro
 
 ```sh
 sudo pacman -Syu --needed unzip git cmake gcc curl wget yasm nasm zip make pkg-config clang gtk3 xdotool libxcb libxfixes alsa-lib pipewire
 ```
 
-### Install vcpkg
+### Instalar vcpkg (Linux)
 
 ```sh
 git clone https://github.com/microsoft/vcpkg
 cd vcpkg
 git checkout 2023.04.15
 cd ..
-vcpkg/bootstrap-vcpkg.sh
+./vcpkg/bootstrap-vcpkg.sh
 export VCPKG_ROOT=$HOME/vcpkg
-vcpkg/vcpkg install libvpx libyuv opus aom
+./vcpkg/vcpkg install libvpx libyuv opus aom
 ```
 
-### Fix libvpx (For Fedora)
+### Fix libvpx (Fedora)
 
 ```sh
 cd vcpkg/buildtrees/libvpx/src
@@ -108,75 +126,95 @@ cd *
 sed -i 's/CFLAGS+=-I/CFLAGS+=-fPIC -I/g' Makefile
 sed -i 's/CXXFLAGS+=-I/CXXFLAGS+=-fPIC -I/g' Makefile
 make
-cp libvpx.a $HOME/vcpkg/installed/x64-linux/lib/
+cp libvpx.a $VCPKG_ROOT/installed/x64-linux/lib/
 cd
 ```
 
-### Build
+### Compilar (Linux, con Flutter)
 
 ```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
-git clone --recurse-submodules https://github.com/rustdesk/rustdesk
-cd rustdesk
-mkdir -p target/debug
-wget https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
-mv libsciter-gtk.so target/debug
-VCPKG_ROOT=$HOME/vcpkg cargo run
+git clone --recurse-submodules https://github.com/MarvaDesk/MarvaDesk
+cd MarvaDesk
+export VCPKG_ROOT=$HOME/vcpkg
+python build.py --flutter
 ```
+
+El ejecutable quedará en `target/release/` (o en la ruta que indique el script de build).
+
+---
 
 ## How to build with Docker
 
-Begin by cloning the repository and building the Docker container:
+Clona el repositorio y construye la imagen:
 
 ```sh
-git clone https://github.com/rustdesk/rustdesk
-cd rustdesk
+git clone https://github.com/MarvaDesk/MarvaDesk
+cd MarvaDesk
 git submodule update --init --recursive
-docker build -t "rustdesk-builder" .
+docker build -t marvadesk-builder .
 ```
 
-Then, each time you need to build the application, run the following command:
+Para compilar cada vez:
 
 ```sh
-docker run --rm -it -v $PWD:/home/user/rustdesk -v rustdesk-git-cache:/home/user/.cargo/git -v rustdesk-registry-cache:/home/user/.cargo/registry -e PUID="$(id -u)" -e PGID="$(id -g)" rustdesk-builder
+docker run --rm -it -v $PWD:/home/user/marvadesk -v marvadesk-git-cache:/home/user/.cargo/git -v marvadesk-registry-cache:/home/user/.cargo/registry -e PUID="$(id -u)" -e PGID="$(id -g)" marvadesk-builder
 ```
 
-Note that the first build may take longer before dependencies are cached, subsequent builds will be faster. Additionally, if you need to specify different arguments to the build command, you may do so at the end of the command in the `<OPTIONAL-ARGS>` position. For instance, if you wanted to build an optimized release version, you would run the command above followed by `--release`. The resulting executable will be available in the target folder on your system, and can be run with:
+Puedes añadir argumentos al final (por ejemplo `--release`). El ejecutable quedará en `target/debug/` o `target/release/` en tu máquina. Ejecuta desde la raíz del repositorio para que la aplicación encuentre los recursos.
 
 ```sh
+# Debug
 target/debug/rustdesk
-```
 
-Or, if you're running a release executable:
-
-```sh
+# Release
 target/release/rustdesk
 ```
 
-Please ensure that you run these commands from the root of the RustDesk repository, or the application may not find the required resources. Also note that other cargo subcommands such as `install` or `run` are not currently supported via this method as they would install or run the program inside the container instead of the host.
+*(Nota: el nombre del binario puede seguir siendo `rustdesk` por herencia del proyecto base; el producto es MarvaDesk.)*
+
+---
 
 ## File Structure
 
-- **[libs/hbb_common](https://github.com/rustdesk/rustdesk/tree/master/libs/hbb_common)**: video codec, config, tcp/udp wrapper, protobuf, fs functions for file transfer, and some other utility functions
-- **[libs/scrap](https://github.com/rustdesk/rustdesk/tree/master/libs/scrap)**: screen capture
-- **[libs/enigo](https://github.com/rustdesk/rustdesk/tree/master/libs/enigo)**: platform specific keyboard/mouse control
-- **[libs/clipboard](https://github.com/rustdesk/rustdesk/tree/master/libs/clipboard)**: file copy and paste implementation for Windows, Linux, macOS.
-- **[src/ui](https://github.com/rustdesk/rustdesk/tree/master/src/ui)**: obsolete Sciter UI (deprecated)
-- **[src/server](https://github.com/rustdesk/rustdesk/tree/master/src/server)**: audio/clipboard/input/video services, and network connections
-- **[src/client.rs](https://github.com/rustdesk/rustdesk/tree/master/src/client.rs)**: start a peer connection
-- **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: Communicate with [rustdesk-server](https://github.com/rustdesk/rustdesk-server), wait for remote direct (TCP hole punching) or relayed connection
-- **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: platform specific code
-- **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: Flutter code for desktop and mobile
-- **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/v1/js)**: JavaScript for Flutter web client
+| Ruta | Descripción |
+|------|-------------|
+| **libs/hbb_common** | Codec de vídeo, config, wrapper TCP/UDP, protobuf, funciones de transferencia de archivos y utilidades |
+| **libs/scrap** | Captura de pantalla |
+| **libs/enigo** | Control de teclado y ratón por plataforma |
+| **libs/clipboard** | Implementación de copiar/pegar entre Windows, Linux y macOS |
+| **src/ui** | UI legacy con Sciter (obsoleta) |
+| **src/server** | Servicios de audio, portapapeles, entrada y vídeo; conexiones de red |
+| **src/client.rs** | Inicio de la conexión entre pares |
+| **src/rendezvous_mediator.rs** | Comunicación con el servidor de encuentro/relé |
+| **src/platform** | Código específico por plataforma |
+| **flutter** | Código Flutter para escritorio y móvil |
+| **flutter/lib/desktop** | UI escritorio |
+| **flutter/lib/mobile** | UI móvil |
+| **flutter/lib/common** | Código compartido y modelos |
+
+---
 
 ## Screenshots
 
-![Connection Manager](https://github.com/rustdesk/rustdesk/assets/28412477/db82d4e7-c4bc-4823-8e6f-6af7eadf7651)
+Puedes añadir aquí capturas de pantalla de MarvaDesk (gestor de conexiones, escritorio remoto, transferencia de archivos, etc.).
 
-![Connected to a Windows PC](https://github.com/rustdesk/rustdesk/assets/28412477/9baa91e9-3362-4d06-aa1a-7518edcbd7ea)
+---
 
-![File Transfer](https://github.com/rustdesk/rustdesk/assets/28412477/39511ad3-aa9a-4f8c-8947-1cce286a46ad)
+## Testing
 
-![TCP Tunneling](https://github.com/rustdesk/rustdesk/assets/28412477/78e8708f-e87e-4570-8373-1360033ea6c5)
+- **Rust:** `cargo test`
+- **Flutter:** `cd flutter && flutter test`
 
+---
+
+## Contributing
+
+Las contribuciones son bienvenidas. Consulta [CONTRIBUTING.md](docs/CONTRIBUTING.md) para empezar.
+
+---
+
+## Licencia
+
+Consulta el archivo [LICENSE](LICENSE) de este repositorio.
